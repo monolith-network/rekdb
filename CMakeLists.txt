@@ -85,7 +85,6 @@ add_executable(rekdb
 #
 target_link_libraries(rekdb
         PRIVATE
-        ${NETTLE_LIBRARIES}
         Threads::Threads
         rocksdb dl
         )
