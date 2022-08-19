@@ -16,6 +16,7 @@ namespace {
    struct configuration {
       short port {4096};
       std::string database_location;
+      std::string address;
    };
 
    rekdb::server_c* server {nullptr};
@@ -41,7 +42,7 @@ void show_usage() {
 
 void run(const configuration& cfg) {
 
-   server = new rekdb::server_c(cfg.port, cfg.database_location);
+   server = new rekdb::server_c(cfg.address, cfg.port, cfg.database_location);
 
    if (!server->start()) {
       std::cerr << "Unable to start server" << std::endl;
@@ -56,6 +57,9 @@ void run(const configuration& cfg) {
    while (active) {
       std::this_thread::sleep_for(100ms);
    }
+
+   server->stop();
+   delete server;
 }
 
 void execute_database(const std::string& file) {
@@ -90,6 +94,15 @@ void execute_database(const std::string& file) {
       cfg.database_location = *database_location;
    } else {
       LOG(ERROR) << TAG("load_config") << "Missing config for 'rekdb database_location'\n";
+      std::exit(1);
+   } 
+   
+   std::optional<std::string> address = 
+      tbl["rekdb"]["address"].value<std::string>();
+   if (address.has_value()) {
+      cfg.address = *address;
+   } else {
+      LOG(ERROR) << TAG("load_config") << "Missing config for 'rekdb address'\n";
       std::exit(1);
    } 
 

@@ -58,6 +58,7 @@ endif()
 #
 include_directories(
    ${CMAKE_SOURCE_DIR})
+
 #
 #  Add subdirectories
 #
@@ -82,6 +83,7 @@ endif()
 #
 add_executable(rekdb
          ${APP_SOURCES}
+         ${EXTERNALS_SOURCES}
          main.cpp)
 
 #
