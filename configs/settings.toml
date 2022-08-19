@@ -1,0 +1,3 @@
+[db]
+port = 4096
+database_location = "/tmp/registrar.db"
