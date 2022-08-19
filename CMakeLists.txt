@@ -11,12 +11,6 @@ option(COMPILE_TESTS "Execute unit tests" ON)
 option(WITH_ASAN     "Compile with ASAN" OFF)
 
 #
-# Find Nettle
-#
-find_package(Nettle REQUIRED)
-include_directories(${NETTLE_INCLUDE_DIRS})
-
-#
 # Find Threads
 #
 find_package (Threads REQUIRED)
