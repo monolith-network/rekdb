@@ -47,6 +47,7 @@ private:
    bool valid_http_req(const httplib::Request& req, 
                         httplib::Response& res, 
                         size_t expected_items);
+   void http_root(const httplib::Request& req ,httplib:: Response &res);
    void http_probe(const httplib::Request& req ,httplib:: Response &res);
    void http_submit(const httplib::Request& req ,httplib:: Response &res);
    void http_fetch(const httplib::Request& req ,httplib:: Response &res);

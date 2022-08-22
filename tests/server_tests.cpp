@@ -103,13 +103,18 @@ TEST(server_test, submit_fetch_probe_delete)
 
    httplib::Client cli(ADDR, PORT);
 
+   // Ensure that the database is online
+   auto res = cli.Get("/");
+   CHECK_TRUE_TEXT(res, "Failed to obtain result from root");
+   CHECK_EQUAL_TEXT(SUCCESS, res->body, "Server is not responding to root");
+
    // Ensure that the database doesn't contain any of the data generated
    for(auto item : data) {
       auto res = cli.Get("/probe/" + item.key);
       CHECK_TRUE_TEXT(res, "Failed to obtain result from probe");
       CHECK_EQUAL_TEXT(NOT_FOUND, res->body, "Item found when it shouldn't exist");
    }
-   
+
    // Submit the data and ensure that it exists after submission
    for(auto item : data) {
       {

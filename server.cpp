@@ -1,6 +1,5 @@
 #include "server.hpp"
 #include <externals/aixlog/logger.hpp>
-#include <externals/simplejson/json.hpp>
 #include <functional>
 #include <chrono>
 
@@ -130,6 +129,12 @@ std::string server_c::get_json_raw_response(const return_codes_e rc, const std::
 
 void server_c::setup_endpoints() {
 
+   _http_server->Get("/", 
+      std::bind(&server_c::http_root, 
+                  this, 
+                  std::placeholders::_1, 
+                  std::placeholders::_2));
+
    _http_server->Get(R"(/probe/(\w+))", 
       std::bind(&server_c::http_probe, 
                   this, 
@@ -167,6 +172,14 @@ bool server_c::valid_http_req(const httplib::Request& req, httplib::Response& re
       return false;
    }
    return true;
+}
+
+void server_c::http_root(const httplib::Request& req ,httplib:: Response &res) {
+   res.set_content(
+      get_json_response(
+         return_codes_e::OKAY,
+         "success"),
+       "application/json");
 }
 
 void server_c::http_probe(const httplib::Request& req, httplib::Response& res) {
@@ -287,7 +300,7 @@ std::string server_c::run_remove(const std::string& key){
    if (status.ok()) {
       return get_json_response(
             return_codes_e::OKAY,
-            "okay");
+            "success");
    }
 
    return get_json_response(return_codes_e::INTERNAL_SERVER_500, "server error");

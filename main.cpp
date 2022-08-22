@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 
+#include <atomic>
+#include <csignal>
 #include <optional>
 #include <toml++/toml.h>
 #include <vector>
@@ -20,7 +22,8 @@ namespace {
    };
 
    rekdb::server_c* server {nullptr};
-   bool active {true};
+   std::atomic<bool> active {true};
+   std::atomic<bool> handling_signal {false};
 }
 
 void setup_logger(AixLog::Severity level) {
@@ -40,6 +43,18 @@ void show_usage() {
    << std::endl;
 }
 
+void handle_signal(int signal) {
+
+   if (handling_signal.load()) {
+      return;
+   }
+
+   handling_signal.store(true);
+   active.store(false);
+
+   std::cout << "\nExiting" << std::endl;
+}
+
 void run(const configuration& cfg) {
 
    server = new rekdb::server_c(cfg.address, cfg.port, cfg.database_location);
@@ -49,17 +64,14 @@ void run(const configuration& cfg) {
       std::exit(1);
    }
 
-   // Keep the main thread alive while the thing is serving
-   // TODO: In the future add signal handlers that will 
-   //       gracefully shutdown the server and kill the 
-   //       main thread
-   //
-   while (active) {
-      std::this_thread::sleep_for(100ms);
+   while (active.load()) {
+      std::this_thread::sleep_for(500ms);
    }
 
    server->stop();
    delete server;
+
+   std::exit(0);
 }
 
 void execute_database(const std::string& file) {
@@ -112,6 +124,13 @@ void execute_database(const std::string& file) {
 int main(int argc, char** argv) {
 
    setup_logger(AixLog::Severity::debug);
+
+   signal(SIGHUP , handle_signal);   /* Hangup the process */ 
+   signal(SIGINT , handle_signal);   /* Interrupt the process */ 
+   signal(SIGQUIT, handle_signal);   /* Quit the process */ 
+   signal(SIGILL , handle_signal);   /* Illegal instruction. */ 
+   signal(SIGTRAP, handle_signal);   /* Trace trap. */ 
+   signal(SIGABRT, handle_signal);   /* Abort. */
 
    std::vector<std::string> args(argv, argv + argc);
 
