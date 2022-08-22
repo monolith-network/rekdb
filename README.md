@@ -17,33 +17,23 @@ database_location = "/tmp/registrar.db"
 
 ## Check if item exists
 
-*Endpoint*: /probe
+*Endpoint*: ``` /probe/< key >```
 
-```
-{ "key": "entry_key" }
-```
-
-Returns:
+*Example*: ``` 127.0.0.1/probe/my_key```
 
 ```
 { "status": 200, "data": "found" }
 ```
-or 
+or
 ```
 { "status": 200, "data": "not found" }
 ```
 
 ## Submit item
 
-*Endpoint*: /submit
+*Endpoint*: ```/submit/< key >/< value >``` 
 
-*Note* : Value must resolve to string data.
-         any data that is stringed json should be
-         B64 or hex encoded to remove parsable json data
-
-```
-{ "key": "entry_key", "value": "string data" }
-```
+*Example*: ``` 127.0.0.1/submit/my_key/my_value```
 
 Returns:
 
@@ -54,39 +44,34 @@ Returns:
 
 ## Fetch item
 
-*Endpoint*: /fetch
+*Endpoint*: ```/fetch/< key >``` 
 
-```
-{ "key": "entry_key" }
-```
+*Example*: ``` 127.0.0.1/fetch/my_key```
 
 Returns:
 
 ```
-{ "status": 200, "data": "entry data" }
+ < data >
 ```
 
 or 
 
 ```
-{ "status": 200, "data": "" }
+{ "status": 200, "data": "not found" }
 ```
 
 if no item is found
 
 ## Delete item
 
-*Endpoint*: /delete
+*Endpoint*: ```/delete/< key >```
+*Example*: ``` 127.0.0.1/fetch/my_key```
 
 *Note*: Deleting an item that does not exist returns "okay"
         as does deleting something that did exist
 
-```
-{ "key": "entry_key" }
-```
-
-returns
+Returns
 
 ```
-{ "status": 200, "data": "okay" }
+{ "status": 200, "data": "success" }
 ```

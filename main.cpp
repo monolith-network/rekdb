@@ -28,7 +28,7 @@ void setup_logger(AixLog::Severity level) {
   auto sink_cout =
       std::make_shared<AixLog::SinkCout>(level, "[#severity] (#tag) #message");
   auto sink_file = std::make_shared<AixLog::SinkFile>(
-      level, "orbd.log",
+      level, "rekdb.log",
       "%Y-%m-%d %H-%M-%S.#ms | [#severity] (#tag) #message");
   AixLog::Log::init({sink_cout, sink_file});
 }

@@ -6,6 +6,7 @@
 #include <rocksdb/db.h>
 #include <thread>
 #include <httplib.h>
+#include <tuple>
 
 namespace rekdb {
 
@@ -22,6 +23,14 @@ public:
    bool stop();
 
 private:
+   enum class return_codes_e {
+      OKAY = 200,
+      BAD_REQUEST_400 = 400,
+      INTERNAL_SERVER_500 = 500,
+      NOT_IMPLEMENTED_501 = 501,
+      GATEWAY_TIMEOUT_504 = 504
+   };
+
    std::string _address;
    short _port {0};
    std::string _db_location;
@@ -30,12 +39,24 @@ private:
    httplib::Server* _http_server {nullptr};
    std::thread _http_thread;
 
+   std::string get_json_response(const return_codes_e rc, 
+                                    const std::string msg);
+   std::string get_json_raw_response(const return_codes_e rc, 
+                                          const std::string json);
    void setup_endpoints();
-   bool valid_req(const httplib::Request& req, httplib::Response& res);
-   void probe(const httplib::Request& req ,httplib:: Response &res);
-   void submit(const httplib::Request& req ,httplib:: Response &res);
-   void fetch(const httplib::Request& req ,httplib:: Response &res);
-   void remove(const httplib::Request& req ,httplib:: Response &res);
+   bool valid_http_req(const httplib::Request& req, 
+                        httplib::Response& res, 
+                        size_t expected_items);
+   void http_probe(const httplib::Request& req ,httplib:: Response &res);
+   void http_submit(const httplib::Request& req ,httplib:: Response &res);
+   void http_fetch(const httplib::Request& req ,httplib:: Response &res);
+   void http_remove(const httplib::Request& req ,httplib:: Response &res);
+
+   std::string run_probe(const std::string& key);
+   std::string run_submit(const std::string& key, const std::string& value);
+   std::tuple<std::string,
+      std::string> run_fetch(const std::string& key);
+   std::string run_remove(const std::string& key);
 };
 
 }

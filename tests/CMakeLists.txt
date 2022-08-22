@@ -8,13 +8,16 @@ include_directories(
 )
 
 add_executable(rekdb-tests
-        ${SOURCES}
-        base_tests.cpp
-        main.cpp)
+         ${APP_SOURCES}
+         ${EXTERNALS_SOURCES}
+         server_tests.cpp
+         main.cpp)
 
 
 target_link_libraries(rekdb-tests
         ${CPPUTEST_LDFLAGS}
-        libutil)
+        libutil
+        Threads::Threads
+        rocksdb dl)
 
 add_custom_command(TARGET rekdb-tests COMMAND ./rekdb-tests POST_BUILD)

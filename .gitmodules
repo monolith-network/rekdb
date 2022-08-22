@@ -7,3 +7,6 @@
 [submodule "cpp-httplib"]
 	path = cpp-httplib
 	url = git@github.com:infonet-dev/cpp-httplib.git
+[submodule "libutil"]
+	path = libutil
+	url = git@github.com:infonet-dev/libutil.git
