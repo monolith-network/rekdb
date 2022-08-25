@@ -135,25 +135,25 @@ void server_c::setup_endpoints() {
                   std::placeholders::_1, 
                   std::placeholders::_2));
 
-   _http_server->Get(R"(/probe/(\w+))", 
+   _http_server->Get(R"(/probe/(.*?))", 
       std::bind(&server_c::http_probe, 
                   this, 
                   std::placeholders::_1, 
                   std::placeholders::_2));
 
-   _http_server->Get(R"(/submit/(\w+)/(.*?))", 
+   _http_server->Get(R"(/submit/(.*?)/(.*?))", 
       std::bind(&server_c::http_submit, 
                   this, 
                   std::placeholders::_1, 
                   std::placeholders::_2));
 
-   _http_server->Get(R"(/fetch/(\w+))", 
+   _http_server->Get(R"(/fetch/(.*?))", 
       std::bind(&server_c::http_fetch, 
                   this, 
                   std::placeholders::_1, 
                   std::placeholders::_2));
 
-   _http_server->Get(R"(/delete/(\w+))", 
+   _http_server->Get(R"(/delete/(.*?))", 
       std::bind(&server_c::http_remove, 
                   this, 
                   std::placeholders::_1, 
