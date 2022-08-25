@@ -2,6 +2,12 @@
 
 A simple key value store database built on `rocksdb` and `cpp-httplib`.
 
+## Requirements
+rocksdb
+libutil
+cpp-httplib
+crate
+
 ## Usage
 ```
 ./rekdb --cfg config.toml

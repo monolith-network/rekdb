@@ -9,13 +9,13 @@ include_directories(
 
 add_executable(rekdb-tests
          ${APP_SOURCES}
-         ${EXTERNALS_SOURCES}
          server_tests.cpp
          main.cpp)
 
 
 target_link_libraries(rekdb-tests
         ${CPPUTEST_LDFLAGS}
+        ${CRATE_LIBRARIES}
         libutil
         Threads::Threads
         rocksdb dl)

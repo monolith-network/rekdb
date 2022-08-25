@@ -11,6 +11,12 @@ option(COMPILE_TESTS "Execute unit tests" ON)
 option(WITH_ASAN     "Compile with ASAN" OFF)
 
 #
+# Find Crate
+#
+find_package(crate REQUIRED)
+include_directories(${CRATE_INCLUDE_DIRS})
+
+#
 # Find Threads
 #
 find_package (Threads REQUIRED)
@@ -54,11 +60,6 @@ include_directories(
    ${CMAKE_SOURCE_DIR})
 
 #
-#  Add subdirectories
-#
-add_subdirectory(externals)
-
-#
 #  Sources
 #
 set(APP_SOURCES
@@ -77,7 +78,6 @@ endif()
 #
 add_executable(rekdb
          ${APP_SOURCES}
-         ${EXTERNALS_SOURCES}
          main.cpp)
 
 #
@@ -87,6 +87,7 @@ target_link_libraries(rekdb
         PRIVATE
         Threads::Threads
         rocksdb dl
+        ${CRATE_LIBRARIES}
         )
 
 #

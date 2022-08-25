@@ -5,8 +5,9 @@
 #include <string>
 
 #include "server.hpp"
-#include "externals/aixlog/logger.hpp"
-#include "externals/simplejson/json.hpp"
+#include <crate/externals/aixlog/logger.hpp>
+#include <crate/externals/simplejson/json.hpp>
+#include <crate/common/common.hpp>
 #include <filesystem>
 
 // This has to be included last as there is a known issue
@@ -48,21 +49,12 @@ namespace {
       }
       return data;
    }
-
-   void setup_logger(AixLog::Severity level) {
-      auto sink_cout =
-            std::make_shared<AixLog::SinkCout>(level, "[#severity] (#tag) #message");
-      auto sink_file = std::make_shared<AixLog::SinkFile>(
-            level, LOGS,
-            "%Y-%m-%d %H-%M-%S.#ms | [#severity] (#tag) #message");
-      AixLog::Log::init({sink_cout, sink_file});
-   }
 }
 
 TEST_GROUP(server_test)
 {
    void setup() {
-      setup_logger(AixLog::Severity::trace);
+      crate::common::setup_logger(LOGS, AixLog::Severity::trace);
 
       server = new rekdb::server_c(
          ADDR, 
