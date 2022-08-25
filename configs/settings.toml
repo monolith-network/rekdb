@@ -1,4 +1,4 @@
 [rekdb]
 address = "0.0.0.0"
-port = 4096
-database_location = "/tmp/registrar.db"
+port = 20001
+database_location = "/tmp/rekdb.db"
